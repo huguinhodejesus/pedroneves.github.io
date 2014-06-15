@@ -100,8 +100,8 @@ var env = {
 
 		self.scene = new THREE.Scene();
 
-		for (var i = 0; i < self.curvas.length; i++) {
-			self.curvas[i].refresh();
+		for (var i = 0; i < self.points.curvas.length; i++) {
+			self.points.curvas[i].refresh();
 			self.scene.add(self.curvas[i].line);
 		};
 		
