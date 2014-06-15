@@ -33,14 +33,15 @@
 				setClick: function(event){
 					// seta a posicao do click do mouse
 
-					this.click.x = (event.pageX - (width/2));
-					this.click.y = ((height/2) - event.pageY)
+					this.click.x = (event.pageX - (env.width/2));
+					this.click.y = ((env.height/2) - event.pageY)
 				}
 			}
 
 			// Detecta o click do mouse
 			$("#c canvas").on('mousedown', function(event){
 				mouse.setClick(event);	// atualiza a posicao do ultimo click
+				env.addControlPoint(mouse.click.x, mouse.click.y);
 			});
 		});
 
