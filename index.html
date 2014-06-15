@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Three js</title>
+	<style>
+		body{
+			margin: 0px;
+			padding: 0px;
+		}
+	</style>
+</head>
+<body>
+	<div id="c"></div>
+
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="/rsrc/three.min.js"></script>
+	<script type="text/javascript" src="/rsrc/util.js"></script>
+	<script type="text/javascript" src="/rsrc/interpolate.js"></script>
+	<script type="text/javascript" src="/rsrc/bezier.js"></script>
+	<script type="text/javascript" src="/rsrc/draw.js"></script>
+
+	<script>
+
+		$(document).ready(function(){
+			
+			var mouse = {
+				click: {
+					x: 0,
+					y: 0,
+				},
+				setClick: function(event){
+					// seta a posicao do click do mouse
+
+					this.click.x = (event.pageX - (width/2));
+					this.click.y = ((height/2) - event.pageY)
+				}
+			}
+
+			// Detecta o click do mouse
+			$("#c canvas").on('mousedown', function(event){
+				mouse.setClick(event);	// atualiza a posicao do ultimo click
+				
+				// identifica qual lista deve receber o novo ponto
+				switch(selectedFunction){
+					case 'point':
+						addPoint(mouse.click.x, mouse.click.y);
+						break;
+					case 'line':
+						addVertexToLine(mouse.click.x, mouse.click.y);
+						break;
+					default:
+						break;
+				}
+
+				// atualiza a cena
+				update();
+			});
+		});
+	</script>
+</body>
+</html>
