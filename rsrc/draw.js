@@ -4,84 +4,107 @@ var env = {
 	camera: null,
 	width: 800,
 	height: 600,
-	pointSets: {
-		clicked: null,
-		controlPoints null,
-		curvas: null,
+	points: {
+		clicked: {
+			set: [],
+		},
+		curvas: [
+			{
+				nome: 'poligonal',
+				set: [],
+				color: 0x0000ff,
+				geometry: new THREE.Geometry(),
+				material: new THREE.LineBasicMaterial(),
+				line: null,
+				refresh: function(){
+					self = this;
+
+					self.geometry.vertices = self.set;
+					self.material = new THREE.LineBasicMaterial({
+						color: self.color
+					});
+
+					line = new THREE.Line(self.geometry, self.material);
+				}
+			}
+		],
 	},
-	init: function(){
+	addPointToCurve: function(curveName, point){
+		var self = this;
+		var vector = new THREE.Vector3(point.x, point.y, 0);
+
+		for (var i = 0; i < self.points.curvas.length; i++) {
+			if(self.points.curvas[i].nome == curveName){
+				self.points.curvas[i].set.push(vector);
+				i = self.points.curvas.length;
+			}
+		};
+	},
+	addCurve: function(curveName, color){
+		var self = this;
+
+		var newCurve = {
+			nome: curveName,
+			set: [],
+			color: color,
+			geometry: new THREE.Geometry(),
+			material: new THREE.LineBasicMaterial(),
+			line: null,
+			refresh: function(){
+				self = this;
+
+				self.geometry.vertices = self.set;
+				self.material = new THREE.LineBasicMaterial({
+					color: self.color
+				});
+
+				line = new THREE.Line(self.geometry, self.material);
+			}
+		}
+
+		self.points.curvas.push(newCurve);
+	},
+	init: function(wid, hei, element){
+		var self = this;
+
+		self.scene = new THREE.Scene();
+		self.renderer = new THREE.WebGLRenderer();
+
+		if(wid && hei){
+			self.width = wid;
+			self.height = hei;
+		}else{
+			self.width = 800;
+			self.height = 600;
+		}
+
+		self.renderer.setSize(self.width, self.height);
+		element.append(self.renderer.domElement);
+		self.camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 500 );
+		// camera.position.set(0, 0, 2);
+		self.camera.lookAt(new THREE.Vector3(0, 0, 0));
+	},
+	addControlPoint: function(x, y){
+		var self = this;
+
+		var pos = {
+			x: x,
+			y: y
+		}
+
+		self.points.clicked.push(pos);
+		self.addPointToCurve('poligonal', pos);
+	},
+	update: function(){
+		var self = this;
+
+		self.scene = new THREE.Scene();
+
+		for (var i = 0; i < self.curvas.length; i++) {
+			self.curvas[i].refresh();
+			self.scene.add(self.curvas[i].line);
+		};
 		
+		self.renderer.render(self.scene, self.camera);
 	}
-}
-
-// ================================= INIT =================================
-var c = $("#c");
-var scene = new THREE.Scene();
-
-var renderer = new THREE.WebGLRenderer();
-var width = 800;
-var height = 600;
-renderer.setSize( width, height );
-c.append(renderer.domElement);
-
-var camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 500 );
-// camera.position.set(0, 0, 2);
-camera.lookAt(new THREE.Vector3(0, 0, 0));
-
-// global para armazenar a listagem, ORDENADA, de vetores que compoem a linhe e o sistema de pontos.
-var pointsList = [];
-var lineVerticesList = [];
-
-// identifica qual funcao deve ser executada.
-// init com lines
-var selectedFunction = "line";
-
-
-// ================================= FUNCTIONS =================================
-
-function update(){
-	/*
-		Cria uma nova cena, atualizada com os novos vetores da linha e dos pontos.
-
-		ToDo:
-			- Sistema de pontos (THREE.Particles)
-			- Multiplas linhas
-	*/
-
-	scene = new THREE.Scene();
-
-	geometry = new THREE.Geometry();
-	geometry.vertices = clone(lineVerticesList);
-
-	var material;
-
-	switch(selectedFunction){
-		case 'point':
-			material = new THREE.ParticleSystemMaterial();
-			break;
-		case 'line':
-			material = new THREE.LineBasicMaterial({
-				color: 0x00ff00,
-			});
-			break;
-		default:
-			break;
-	}
-
-	line = new THREE.Line(geometry, material);
-	scene.add(line);
-
-	renderer.render(scene, camera);
-}
-
-// LINES ==================================================================
-
-function addVertexToLine(x, y){
-	lineVerticesList.push(new THREE.Vector3(x, y, 0));
-}
-
-// POINTS ==================================================================
-
-function addPoint(x, y){
-	pointsList.push(new THREE.Vector3(x, y, 0));
 }

@@ -23,7 +23,8 @@
 	<script>
 
 		$(document).ready(function(){
-			
+			env.init(800, 600, $("#c"));
+
 			var mouse = {
 				click: {
 					x: 0,
@@ -40,23 +41,12 @@
 			// Detecta o click do mouse
 			$("#c canvas").on('mousedown', function(event){
 				mouse.setClick(event);	// atualiza a posicao do ultimo click
-				
-				// identifica qual lista deve receber o novo ponto
-				switch(selectedFunction){
-					case 'point':
-						addPoint(mouse.click.x, mouse.click.y);
-						break;
-					case 'line':
-						addVertexToLine(mouse.click.x, mouse.click.y);
-						break;
-					default:
-						break;
-				}
-
-				// atualiza a cena
-				update();
 			});
 		});
+
+		setInterval(function(){
+			env.update();
+		}, 50);
 	</script>
 </body>
 </html>
