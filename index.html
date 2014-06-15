@@ -41,6 +41,8 @@
 			// Detecta o click do mouse
 			$("#c canvas").on('mousedown', function(event){
 				mouse.setClick(event);	// atualiza a posicao do ultimo click
+				
+				console.log('click detectado em ' mouse.click.x + ' e ' + mouse.click.y);
 				env.addControlPoint(mouse.click.x, mouse.click.y);
 			});
 		});

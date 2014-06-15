@@ -18,6 +18,7 @@ var env = {
 				line: null,
 				refresh: function(){
 					self = this;
+					console.log('Refreshing > ' self.nome)
 
 					self.geometry.vertices = self.set;
 					self.material = new THREE.LineBasicMaterial({
@@ -31,7 +32,9 @@ var env = {
 	},
 	addPointToCurve: function(curveName, point){
 		var self = this;
+		console.log('Adicionando ponto a curva "' + curveName + '"')
 		var vector = new THREE.Vector3(point.x, point.y, 0);
+		console.log(vector);
 
 		for (var i = 0; i < self.points.curvas.length; i++) {
 			if(self.points.curvas[i].nome == curveName){
@@ -86,12 +89,14 @@ var env = {
 	},
 	addControlPoint: function(x, y){
 		var self = this;
+		console.log(self);
 
 		var pos = {
 			x: x,
 			y: y
 		}
-
+		console.log('Adicionando control point...')
+		console.log(pos);
 		self.points.clicked.set.push(pos);
 		self.addPointToCurve('poligonal', pos);
 	},
