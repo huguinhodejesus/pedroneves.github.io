@@ -23,6 +23,11 @@
 	<script>
 
 		$(document).ready(function(){
+			// var renderer = new THREE.WebGLRenderer();
+			// renderer.setSize(800, 600);
+			// $("#c").append(renderer);
+			// env.init(renderer);
+
 			env.init(800, 600, $("#c"));
 
 			var mouse = {
@@ -41,15 +46,13 @@
 			// Detecta o click do mouse
 			$("#c canvas").on('mousedown', function(event){
 				mouse.setClick(event);	// atualiza a posicao do ultimo click
-				
-				console.log('click detectado em ' mouse.click.x + ' e ' + mouse.click.y);
 				env.addControlPoint(mouse.click.x, mouse.click.y);
 			});
 		});
 
 		setInterval(function(){
 			env.update();
-		}, 50);
+		}, 100);
 	</script>
 </body>
 </html>

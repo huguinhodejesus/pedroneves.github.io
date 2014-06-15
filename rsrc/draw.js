@@ -18,23 +18,22 @@ var env = {
 				line: null,
 				refresh: function(){
 					self = this;
-					console.log('Refreshing > ' self.nome)
-
+					
+					self.geometry = new THREE.Geometry();
 					self.geometry.vertices = self.set;
+
 					self.material = new THREE.LineBasicMaterial({
 						color: self.color
 					});
 
-					line = new THREE.Line(self.geometry, self.material);
+					self.line = new THREE.Line(self.geometry, self.material);
 				}
 			}
 		],
 	},
 	addPointToCurve: function(curveName, point){
 		var self = this;
-		console.log('Adicionando ponto a curva "' + curveName + '"')
 		var vector = new THREE.Vector3(point.x, point.y, 0);
-		console.log(vector);
 
 		for (var i = 0; i < self.points.curvas.length; i++) {
 			if(self.points.curvas[i].nome == curveName){
@@ -67,6 +66,17 @@ var env = {
 
 		self.points.curvas.push(newCurve);
 	},
+	addControlPoint: function(x, y){
+		var self = this;
+
+		var pos = {
+			x: x,
+			y: y
+		}
+		
+		self.points.clicked.set.push(pos);
+		self.addPointToCurve('poligonal', pos);
+	},
 	init: function(wid, hei, element){
 		var self = this;
 
@@ -84,21 +94,8 @@ var env = {
 		self.renderer.setSize(self.width, self.height);
 		element.append(self.renderer.domElement);
 		self.camera = new THREE.OrthographicCamera( self.width / - 2, self.width / 2, self.height / 2, self.height / - 2, 1, 500 );
-		// camera.position.set(0, 0, 2);
+		self.camera.position.set(0, 0, 20);
 		self.camera.lookAt(new THREE.Vector3(0, 0, 0));
-	},
-	addControlPoint: function(x, y){
-		var self = this;
-		console.log(self);
-
-		var pos = {
-			x: x,
-			y: y
-		}
-		console.log('Adicionando control point...')
-		console.log(pos);
-		self.points.clicked.set.push(pos);
-		self.addPointToCurve('poligonal', pos);
 	},
 	update: function(){
 		var self = this;
@@ -107,6 +104,9 @@ var env = {
 
 		for (var i = 0; i < self.points.curvas.length; i++) {
 			self.points.curvas[i].refresh();
+		};
+
+		for (var i = 0; i < self.points.curvas.length; i++) {
 			self.scene.add(self.points.curvas[i].line);
 		};
 		
