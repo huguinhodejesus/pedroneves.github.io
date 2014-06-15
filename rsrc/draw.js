@@ -92,7 +92,7 @@ var env = {
 			y: y
 		}
 
-		self.points.clicked.push(pos);
+		self.points.clicked.set.push(pos);
 		self.addPointToCurve('poligonal', pos);
 	},
 	update: function(){
