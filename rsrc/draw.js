@@ -102,7 +102,7 @@ var env = {
 
 		for (var i = 0; i < self.points.curvas.length; i++) {
 			self.points.curvas[i].refresh();
-			self.scene.add(self.curvas[i].line);
+			self.scene.add(self.points.curvas[i].line);
 		};
 		
 		self.renderer.render(self.scene, self.camera);
