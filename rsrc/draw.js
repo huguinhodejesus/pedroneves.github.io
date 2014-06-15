@@ -80,7 +80,7 @@ var env = {
 
 		self.renderer.setSize(self.width, self.height);
 		element.append(self.renderer.domElement);
-		self.camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 500 );
+		self.camera = new THREE.OrthographicCamera( self.width / - 2, self.width / 2, self.height / 2, self.height / - 2, 1, 500 );
 		// camera.position.set(0, 0, 2);
 		self.camera.lookAt(new THREE.Vector3(0, 0, 0));
 	},
