@@ -34,9 +34,14 @@ var env = {
 	setPointsToCurve: function(curveName, pts){
 		var self = this;
 		var vectorList = [];
+		var z = 0;
+
+		if(curveName == "bezier"){
+			z = 1;
+		}
 
 		for (var i = 0; i < pts.length; i++) {
-			vectorList.push(new THREE.Vector3(pts[i].x, pts[i].y, 0));
+			vectorList.push(new THREE.Vector3(pts[i].x, pts[i].y, z));
 		};
 
 		for (var i = 0; i < self.points.curvas.length; i++) {
