@@ -69,7 +69,7 @@ function createBezier() {
 		getPoints: function(){
 			var list = [];
 
-			for (var i = 0; i <= 1; i = i + 0.05) {
+			for (var i = 0; i <= 1; i = i + 0.005) {
 				list.push(this.get(i));
 			};
 
