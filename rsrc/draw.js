@@ -31,6 +31,21 @@ var env = {
 			}
 		],
 	},
+	setPointsToCurve: function(curveName, pts){
+		var self = this;
+		var vectorList = [];
+
+		for (var i = 0; i < pts.length; i++) {
+			vectorList.push(new THREE.Vector3(pts[i].x, pts[i].y, 0));
+		};
+
+		for (var i = 0; i < self.points.curvas.length; i++) {
+			if(self.points.curvas[i].nome == curveName){
+				self.points.curvas[i].set = vectorList;
+				i = self.points.curvas.length;
+			}
+		};
+	},
 	addPointToCurve: function(curveName, point){
 		var self = this;
 		var vector = new THREE.Vector3(point.x, point.y, 0);
@@ -54,8 +69,10 @@ var env = {
 			line: null,
 			refresh: function(){
 				self = this;
-
+				
+				self.geometry = new THREE.Geometry();
 				self.geometry.vertices = self.set;
+
 				self.material = new THREE.LineBasicMaterial({
 					color: self.color
 				});

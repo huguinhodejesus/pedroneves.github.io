@@ -25,13 +25,12 @@
 
 	<script>
 		var bezier = null;
+
 		$(document).ready(function(){
-			// var renderer = new THREE.WebGLRenderer();
-			// renderer.setSize(800, 600);
-			// $("#c").append(renderer);
-			// env.init(renderer);
 
 			env.init(500, 500, $("#c"));
+			env.addCurve('bezier', 0x00ff00);
+			bezier = createBezier();
 
 			var mouse = {
 				click: {
@@ -50,18 +49,9 @@
 			$("#c canvas").on('mousedown', function(event){
 				mouse.setClick(event);	// atualiza a posicao do ultimo click
 				env.addControlPoint(mouse.click.x, mouse.click.y);
+				bezier.setControlPoints(env.points.clicked.set);
+				env.setPointsToCurve('bezier', bezier.getPoints());
 			});
-
-			
-			$("#bez").click(function(){
-				bezier = createBezier(env.points.clicked.set);
-
-				env.addCurve('bezier', 0x00ff00);
-
-				for (var i = 0; i < 1; i = i + 0.01) {
-					env.addPointToCurve('bezier', bezier.get(i));
-				};
-			})
 		});
 
 		setInterval(function(){
