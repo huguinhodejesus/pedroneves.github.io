@@ -12,6 +12,9 @@
 </head>
 <body>
 	<div id="c"></div>
+	<div>
+		<button id="bez">Bezier!</button>
+	</div>
 
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="/rsrc/three.min.js"></script>
@@ -21,14 +24,14 @@
 	<script type="text/javascript" src="/rsrc/draw.js"></script>
 
 	<script>
-
+		var bezier = null;
 		$(document).ready(function(){
 			// var renderer = new THREE.WebGLRenderer();
 			// renderer.setSize(800, 600);
 			// $("#c").append(renderer);
 			// env.init(renderer);
 
-			env.init(800, 600, $("#c"));
+			env.init(500, 500, $("#c"));
 
 			var mouse = {
 				click: {
@@ -48,6 +51,17 @@
 				mouse.setClick(event);	// atualiza a posicao do ultimo click
 				env.addControlPoint(mouse.click.x, mouse.click.y);
 			});
+
+			
+			$("#bez").click(function(){
+				bezier = createBezier(env.points.clicked.set);
+
+				env.addCurve('bezier', 0x00ff00);
+
+				for (var i = 0; i < 1; i = i + 0.01) {
+					env.addPointToCurve('bezier', bezier.get(i));
+				};
+			})
 		});
 
 		setInterval(function(){

@@ -46,7 +46,7 @@ function createBezier(pts) {
 		},
 		init: function(controlPoints){
 			this.nivel[0] = controlPoints;
-			buildLevels();
+			this.buildLevels();
 			this.numberLevels = (controlPoints.length - 1);
 		},
 		getForLevel: function(t, lvl){
@@ -56,10 +56,12 @@ function createBezier(pts) {
 			for (var i = 0; i < self.nivel[lvl].length; i++) {
 				retorno.push((self.nivel[lvl][i])(t));
 			};
+
+			return retorno;
 		},
 		get: function(t){
 			var self = this;
-			var retorno = getForLevel(t, (self.numberLevels - 1))
+			var retorno = self.getForLevel(t, self.numberLevels);
 			return retorno[0];
 		}
 	}

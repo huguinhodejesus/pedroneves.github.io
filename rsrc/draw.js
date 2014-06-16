@@ -60,7 +60,7 @@ var env = {
 					color: self.color
 				});
 
-				line = new THREE.Line(self.geometry, self.material);
+				self.line = new THREE.Line(self.geometry, self.material);
 			}
 		}
 
@@ -104,9 +104,6 @@ var env = {
 
 		for (var i = 0; i < self.points.curvas.length; i++) {
 			self.points.curvas[i].refresh();
-		};
-
-		for (var i = 0; i < self.points.curvas.length; i++) {
 			self.scene.add(self.points.curvas[i].line);
 		};
 		
