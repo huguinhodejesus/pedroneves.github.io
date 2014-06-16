@@ -47,14 +47,17 @@ function interpolate(point1, point2){
 
 function interpolatefn(point1, point2){
 	return function(t){
+		var fn1 = (point1)(t);
+		var fn2 = (point2)(t);
+		
 		var p1 = {
-			x: ((1-t) * ((point1)(t)).x),
-			y: ((1-t) * ((point1)(t)).y)
+			x: ((1-t) * fn1.x),
+			y: ((1-t) * fn1.y)
 		};
 
 		var p2 = {
-			x: (t * ((point2)(t)).x),
-			y: (t * ((point2)(t)).y)
+			x: (t * fn2.x),
+			y: (t * fn2.y)
 		};
 
 		var res = {
