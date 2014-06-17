@@ -12,10 +12,7 @@
 </head>
 <body>
 	<div id="c"></div>
-	<div>
-		<button id="bez">Bezier!</button>
-	</div>
-
+	
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="/rsrc/three.min.js"></script>
 	<script type="text/javascript" src="/rsrc/util.js"></script>
@@ -25,13 +22,13 @@
 	<script type="text/javascript" src="/rsrc/draw.js"></script>
 
 	<script>
-		var bezier = null;
+		var fmill = null;
 
 		$(document).ready(function(){
 
 			env.init(500, 500, $("#c"));
-			env.addCurve('bezier', 0x00ff00);
-			bezier = createBezier();
+			env.addCurve('fmill', 0x00ff00);
+			fmill = createCatmullRom();
 
 			var mouse = {
 				click: {
@@ -50,8 +47,8 @@
 			$("#c canvas").on('mousedown', function(event){
 				mouse.setClick(event);	// atualiza a posicao do ultimo click
 				env.addControlPoint(mouse.click.x, mouse.click.y);
-				bezier.setControlPoints(env.points.clicked.set);
-				env.setPointsToCurve('bezier', bezier.getPoints());
+				fmill.setControlPoints(env.points.clicked.set);
+				env.setPointsToCurve('fmill', fmill.getPoints());
 			});
 		});
 
