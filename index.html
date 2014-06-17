@@ -12,7 +12,7 @@
 </head>
 <body>
 	<div id="c"></div>
-	
+
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="/rsrc/three.min.js"></script>
 	<script type="text/javascript" src="/rsrc/util.js"></script>
@@ -43,18 +43,58 @@
 				}
 			}
 
-			// Detecta o click do mouse
-			$("#c canvas").on('mousedown', function(event){
-				mouse.setClick(event);	// atualiza a posicao do ultimo click
+			$("#c canvas").on('dblclick', function(event){
+				mouse.setClick(event);
 				env.addControlPoint(mouse.click.x, mouse.click.y);
 				fmill.setControlPoints(env.points.clicked.set);
 				env.setPointsToCurve('fmill', fmill.getPoints());
+			});
+
+			var mousepressed = false; // identifica se o mouse está precionado
+			var sphereSelected = -1;
+
+			$("#c canvas").on('mousedown', function(event){
+				mouse.setClick(event);
+				mousepressed = true;
+
+				env.cursor.x = mouse.click.x;
+				env.cursor.y = mouse.click.y;
+
+				for (var i = 0; i < env.points.curvas[0].line.length; i++) {
+					if(Math.abs(env.points.curvas[0].line[i].position.distanceTo(env.cursor)) < 3){
+						sphereSelected = i;
+						i = env.points.curvas[0].line.length;
+					}
+				};
+			});
+
+			$("#c canvas").on('mouseup', function(event){
+				mouse.setClick(event);
+				mousepressed = false;
+			});
+
+			$("#c canvas").on('mousemove', function(event){
+				mouse.setClick(event);
+				if(mousepressed && (sphereSelected > -1)){
+					env.points.curvas[0].set[sphereSelected].x = mouse.click.x;
+					env.points.curvas[0].set[sphereSelected].y = mouse.click.y;
+					env.points.clicked.set[sphereSelected].x = mouse.click.x;
+					env.points.clicked.set[sphereSelected].y = mouse.click.y;
+					fmill.setControlPoints(env.points.clicked.set);
+					env.setPointsToCurve('fmill', fmill.getPoints());
+				}else{
+					sphereSelected = -1;
+				}
+			});
+			$("#c canvas").on('mouseleave', function(event){
+				mousepressed = false;
+				sphereSelected = -1;
 			});
 		});
 
 		setInterval(function(){
 			env.update();
-		}, 100);
+		}, 50);
 	</script>
 </body>
 </html>

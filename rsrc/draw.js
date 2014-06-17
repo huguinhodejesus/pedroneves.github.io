@@ -4,6 +4,7 @@ var env = {
 	camera: null,
 	width: 800,
 	height: 600,
+	cursor: null,
 	points: {
 		clicked: {
 			set: [],
@@ -13,20 +14,29 @@ var env = {
 				nome: 'poligonal',
 				set: [],
 				color: 0x0000ff,
-				geometry: new THREE.Geometry(),
-				material: new THREE.LineBasicMaterial(),
+				geometry: null,
+				material: null,
 				line: null,
 				refresh: function(){
 					self = this;
+
+					var geo = null;
+					var mat = null;
+					var sphere = null;
+					self.line = [];
+
+					for (var i = 0; i < self.set.length; i++) {
+						geo = new THREE.SphereGeometry(3, 8, 8);
+
+						mat = new THREE.MeshBasicMaterial({
+							color: self.color,
+						});
+
+						sphere = new THREE.Mesh(geo, mat);
+						sphere.position = self.set[i];
+						self.line.push(sphere);
+					};
 					
-					self.geometry = new THREE.Geometry();
-					self.geometry.vertices = self.set;
-
-					self.material = new THREE.LineBasicMaterial({
-						color: self.color
-					});
-
-					self.line = new THREE.Line(self.geometry, self.material);
 				}
 			}
 		],
@@ -35,10 +45,6 @@ var env = {
 		var self = this;
 		var vectorList = [];
 		var z = 0;
-
-		if(curveName != "poligonal"){
-			z = 1;
-		}
 
 		for (var i = 0; i < pts.length; i++) {
 			vectorList.push(new THREE.Vector3(pts[i].x, pts[i].y, z));
@@ -102,6 +108,8 @@ var env = {
 	init: function(wid, hei, element){
 		var self = this;
 
+		self.cursor = new THREE.Vector3(0,0,0);
+
 		self.scene = new THREE.Scene();
 		self.renderer = new THREE.WebGLRenderer();
 
@@ -126,7 +134,13 @@ var env = {
 
 		for (var i = 0; i < self.points.curvas.length; i++) {
 			self.points.curvas[i].refresh();
-			self.scene.add(self.points.curvas[i].line);
+			if(self.points.curvas[i].nome == 'poligonal'){
+				for (var j = 0; j < self.points.curvas[i].line.length; j++) {
+					self.scene.add(self.points.curvas[i].line[j]);
+				};
+			}else{
+				self.scene.add(self.points.curvas[i].line);
+			}
 		};
 		
 		self.renderer.render(self.scene, self.camera);
