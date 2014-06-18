@@ -105,6 +105,20 @@ var env = {
 		self.points.clicked.set.push(pos);
 		self.addPointToCurve('poligonal', pos);
 	},
+	removeControlPoint: function(x, y){
+		var self = this;
+		
+		var pointOnList = new THREE.Vector3(0,0,0);
+
+		for (var i = 0; i < self.points.clicked.set.length; i++) {
+			pointOnList.x = self.points.clicked.set[i].x;
+			pointOnList.y = self.points.clicked.set[i].y;
+
+			if((self.cursor.distanceTo(pointOnList)) <= 3){
+				self.points.clicked.set.splice(i, 1);
+			}
+		};
+	},
 	init: function(wid, hei, element){
 		var self = this;
 
@@ -134,6 +148,7 @@ var env = {
 
 		for (var i = 0; i < self.points.curvas.length; i++) {
 			self.points.curvas[i].refresh();
+
 			if(self.points.curvas[i].nome == 'poligonal'){
 				for (var j = 0; j < self.points.curvas[i].line.length; j++) {
 					self.scene.add(self.points.curvas[i].line[j]);

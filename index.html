@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Three js</title>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<title>P2-17: Interpolação de B-splines Cúbico C1 Interativo</title>
 	<style>
 		body{
 			margin: 0px;
@@ -11,9 +12,48 @@
 	</style>
 </head>
 <body>
-	<div id="c"></div>
+
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="http://www.cin.ufpe.br/~if680/">Processamento Gráfico</a>
+			</div>
+
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<p id="text-mouse-coords" class="navbar-text navbar-right">
+							(<span id="mouse-x">0</span>, <span id="mouse-y">0</span>)
+						</p>
+					</li>
+					<li>
+						<button id="add" type="button" class="btn btn-primary navbar-btn btn-function">Adicionar</button>
+					</li>
+					<li>
+						<button id="remove" type="button" class="btn btn-default navbar-btn btn-function">Remover</button>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12 text-center" style="margin: 0px; padding: 0px;">
+				<div id="c"></div>
+			</div>
+		</div>
+	</div>
+
 
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/rsrc/three.min.js"></script>
 	<script type="text/javascript" src="/rsrc/util.js"></script>
 	<script type="text/javascript" src="/rsrc/interpolate.js"></script>
@@ -23,10 +63,11 @@
 
 	<script>
 		var fmill = null;
+		var functionSelected = "add";
 
 		$(document).ready(function(){
 
-			env.init(500, 500, $("#c"));
+			env.init(800, 500, $("#c"));
 			env.addCurve('fmill', 0x00ff00);
 			fmill = createCatmullRom();
 
@@ -37,28 +78,43 @@
 				},
 				setClick: function(event){
 					// seta a posicao do click do mouse
-
-					this.click.x = (event.pageX - (env.width/2));
-					this.click.y = ((env.height/2) - event.pageY)
+					this.click.x = (event.offsetX - (env.width/2));
+					this.click.y = ((env.height/2) - event.offsetY);
 				}
 			}
 
-			$("#c canvas").on('dblclick', function(event){
+			$(".btn-function").click(function(){
+				var btn = $(this);
+				id = btn.attr('id');
+				if(functionSelected != id){
+					$(".btn-function").removeClass("btn-primary").addClass('btn-default');
+					$("#" + id).removeClass("btn-default").addClass('btn-primary');
+					functionSelected = id;
+				}
+			});
+
+			var canvas = $("#c canvas");
+
+			canvas.on('dblclick', function(event){
 				mouse.setClick(event);
-				env.addControlPoint(mouse.click.x, mouse.click.y);
+
+				if(functionSelected == 'add'){
+					env.addControlPoint(mouse.click.x, mouse.click.y);
+				}else if(functionSelected == 'remove'){
+					env.removeControlPoint(mouse.click.x, mouse.click.y);
+				}
+
 				fmill.setControlPoints(env.points.clicked.set);
 				env.setPointsToCurve('fmill', fmill.getPoints());
+				env.setPointsToCurve('poligonal', env.points.clicked.set);
 			});
 
 			var mousepressed = false; // identifica se o mouse está precionado
 			var sphereSelected = -1;
 
-			$("#c canvas").on('mousedown', function(event){
+			canvas.on('mousedown', function(event){
 				mouse.setClick(event);
 				mousepressed = true;
-
-				env.cursor.x = mouse.click.x;
-				env.cursor.y = mouse.click.y;
 
 				for (var i = 0; i < env.points.curvas[0].line.length; i++) {
 					if(Math.abs(env.points.curvas[0].line[i].position.distanceTo(env.cursor)) < 3){
@@ -68,25 +124,35 @@
 				};
 			});
 
-			$("#c canvas").on('mouseup', function(event){
+			canvas.on('mouseup', function(event){
 				mouse.setClick(event);
 				mousepressed = false;
 			});
 
-			$("#c canvas").on('mousemove', function(event){
+			var x = $("#text-mouse-coords #mouse-x");
+			var y = $("#text-mouse-coords #mouse-y");
+			canvas.on('mousemove', function(event){
 				mouse.setClick(event);
+
+				env.cursor.x = mouse.click.x;
+				env.cursor.y = mouse.click.y;
+
+				x.html(mouse.click.x);
+				y.html(mouse.click.y);
+
 				if(mousepressed && (sphereSelected > -1)){
-					env.points.curvas[0].set[sphereSelected].x = mouse.click.x;
-					env.points.curvas[0].set[sphereSelected].y = mouse.click.y;
+					
 					env.points.clicked.set[sphereSelected].x = mouse.click.x;
 					env.points.clicked.set[sphereSelected].y = mouse.click.y;
+
 					fmill.setControlPoints(env.points.clicked.set);
+					env.setPointsToCurve('poligonal', env.points.clicked.set);
 					env.setPointsToCurve('fmill', fmill.getPoints());
 				}else{
 					sphereSelected = -1;
 				}
 			});
-			$("#c canvas").on('mouseleave', function(event){
+			canvas.on('mouseleave', function(event){
 				mousepressed = false;
 				sphereSelected = -1;
 			});
