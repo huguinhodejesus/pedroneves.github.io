@@ -1,4 +1,4 @@
-pedroneves.github.io
+P2-17: Interpolação de B-splines Cúbico C1 Interativo
 ====================
 
 Modo
