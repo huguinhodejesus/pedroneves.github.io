@@ -5,10 +5,17 @@ function createCatmullRom() {
 		segments: [],
 		numberSegments: 0,
 		a: 0.5,
+		isClosed: false,
 		setControlPoints: function(pts){
 			if(pts.length >= 4){
 				this.controlPoints = pts;
-				this.numberSegments = (pts.length - 3);
+
+				if(this.isClosed){
+					this.numberSegments = pts.length;
+				}else{
+					this.numberSegments = (pts.length - 3);
+				}
+				
 				this.buildSegments();
 			}else{
 				this.controlPoints = [];
@@ -86,10 +93,22 @@ function createCatmullRom() {
 		buildForSegment: function(segmentNumber){
 			var self = this;
 			
-			var p0 = self.controlPoints[segmentNumber]
-			var p1 = self.controlPoints[segmentNumber + 1];
-			var p2 = self.controlPoints[segmentNumber + 2];
-			var p3 = self.controlPoints[segmentNumber + 3];
+			var p0 = null;
+			var p1 = null;
+			var p2 = null;
+			var p3 = null;
+
+			if(self.isClosed){
+				p0 = self.controlPoints[(segmentNumber % self.controlPoints.length)]
+				p1 = self.controlPoints[((segmentNumber + 1) % self.controlPoints.length)];
+				p2 = self.controlPoints[((segmentNumber + 2) % self.controlPoints.length)];
+				p3 = self.controlPoints[((segmentNumber + 3) % self.controlPoints.length)];
+			}else{
+				p0 = self.controlPoints[segmentNumber]
+				p1 = self.controlPoints[segmentNumber + 1];
+				p2 = self.controlPoints[segmentNumber + 2];
+				p3 = self.controlPoints[segmentNumber + 3];
+			}
 
 			var b0 = p1;
 			var b1 = self.secondBezier(p0, p1, p2);

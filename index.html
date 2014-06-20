@@ -38,6 +38,9 @@
 					<li>
 						<button id="remove" type="button" class="btn btn-default navbar-btn btn-function">Remover</button>
 					</li>
+					<li>
+						<button id="close" type="button" class="btn btn-default navbar-btn">Fechar</button>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -64,6 +67,7 @@
 	<script>
 		var fmill = null;
 		var functionSelected = "add";
+		var isFmillClosed = false;
 
 		$(document).ready(function(){
 
@@ -93,6 +97,21 @@
 				}
 			});
 
+			$("#close").click(function(){
+				if($(this).hasClass('btn-default')){
+					$(this).removeClass('btn-default').addClass('btn-warning');
+					isFmillClosed = true;
+				}else{
+					$(this).removeClass('btn-warning').addClass('btn-default');
+					isFmillClosed = false;
+				}
+
+				fmill.isClosed = isFmillClosed;
+				fmill.setControlPoints(env.points.clicked.set);
+				env.setPointsToCurve('poligonal', env.points.clicked.set);
+				env.setPointsToCurve('fmill', fmill.getPoints());
+			})
+
 			var canvas = $("#c canvas");
 
 			canvas.on('dblclick', function(event){
@@ -104,6 +123,7 @@
 					env.removeControlPoint(mouse.click.x, mouse.click.y);
 				}
 
+				fmill.isClosed = isFmillClosed;
 				fmill.setControlPoints(env.points.clicked.set);
 				env.setPointsToCurve('fmill', fmill.getPoints());
 				env.setPointsToCurve('poligonal', env.points.clicked.set);
@@ -145,6 +165,7 @@
 					env.points.clicked.set[sphereSelected].x = mouse.click.x;
 					env.points.clicked.set[sphereSelected].y = mouse.click.y;
 
+					fmill.isClosed = isFmillClosed;
 					fmill.setControlPoints(env.points.clicked.set);
 					env.setPointsToCurve('poligonal', env.points.clicked.set);
 					env.setPointsToCurve('fmill', fmill.getPoints());

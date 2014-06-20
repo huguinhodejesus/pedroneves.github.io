@@ -17,6 +17,7 @@ var env = {
 				geometry: null,
 				material: null,
 				line: null,
+				isClosed: false,
 				refresh: function(){
 					self = this;
 
@@ -78,6 +79,7 @@ var env = {
 			geometry: new THREE.Geometry(),
 			material: new THREE.LineBasicMaterial(),
 			line: null,
+			isClosed: false,
 			refresh: function(){
 				self = this;
 				
