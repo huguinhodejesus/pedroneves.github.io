@@ -116,8 +116,9 @@ var env = {
 			pointOnList.x = self.points.clicked.set[i].x;
 			pointOnList.y = self.points.clicked.set[i].y;
 
-			if((self.cursor.distanceTo(pointOnList)) <= 3){
+			if((self.cursor.distanceTo(pointOnList)) <= 5){
 				self.points.clicked.set.splice(i, 1);
+				i = self.points.clicked.set.length;
 			}
 		};
 	},
