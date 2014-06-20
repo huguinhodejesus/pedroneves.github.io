@@ -117,16 +117,18 @@
 			canvas.on('dblclick', function(event){
 				mouse.setClick(event);
 
-				if(functionSelected == 'add'){
-					env.addControlPoint(mouse.click.x, mouse.click.y);
-				}else if(functionSelected == 'remove'){
-					env.removeControlPoint(mouse.click.x, mouse.click.y);
-				}
+				if(sphereSelected == -1){
+					if(functionSelected == 'add'){
+						env.addControlPoint(mouse.click.x, mouse.click.y);
+					}else if(functionSelected == 'remove'){
+						env.removeControlPoint(mouse.click.x, mouse.click.y);
+					}
 
-				fmill.isClosed = isFmillClosed;
-				fmill.setControlPoints(env.points.clicked.set);
-				env.setPointsToCurve('fmill', fmill.getPoints());
-				env.setPointsToCurve('poligonal', env.points.clicked.set);
+					fmill.isClosed = isFmillClosed;
+					fmill.setControlPoints(env.points.clicked.set);
+					env.setPointsToCurve('fmill', fmill.getPoints());
+					env.setPointsToCurve('poligonal', env.points.clicked.set);
+				}
 			});
 
 			var mousepressed = false; // identifica se o mouse está precionado
