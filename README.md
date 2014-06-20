@@ -27,3 +27,8 @@ solte o clique.
 
 Pode ser que apareça o ícone de operação proibída, mas normalmente ocorre só na primeira vez. Para resolver, basta
 soltar o botão do clique, mover o mouse para a posição desejada e clicar (mas sem segurar) para soltar o ponto.
+
+Curvas fechadas
+---
+
+Para fechar a curva, selecione a opção 'Fechar' na barra de ferramentas. Default false.
